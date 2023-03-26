@@ -2,15 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './create-car-form.module.css'
 
-
-const clearData = {
-  price: '',
-  car: '',
-  image: '',
-}
-
 const CreateCarForm = ({ setCars }) => {
-  const [data, setData] = useState(clearData);
 
   const createCar = data => {
      setCars(prev => [
@@ -20,7 +12,7 @@ const CreateCarForm = ({ setCars }) => {
       },
       ...prev,
     ])
-    setData(clearData)
+    reset()
   }
 
   const {register, reset, handleSubmit, formState:{errors}} = useForm({
@@ -35,36 +27,19 @@ const CreateCarForm = ({ setCars }) => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(createCar)} >
       <input
-        type="text"
+        {...register('car', { required: 'Name is required'})}
         placeholder='Name auto'
-        onChange={e =>
-          setData(prev => ({
-            ...prev,
-            car: e.target.value,
-          }))
-        }
-        value={data.car}
       />
-
-      <input type="text"
+      {errors?.car?.message && <p style={{
+        color:'red',
+      }}>Name is required</p>}
+      <input
+        {...register('price', { required: true })}
         placeholder='Price'
-        onChange={e =>
-          setData(prev => ({
-            ...prev,
-            price: e.target.value,
-          }))
-        }
-        value={data.price}
       />
       <input type="text"
+        {...register('image', { required: true })}
         placeholder='Image'
-        onChange={e =>
-          setData(prev => ({
-            ...prev,
-            image: e.target.value,
-          }))
-        }
-        value={data.image}
       />
       <button className='btn'>Create</button>
     </form>
